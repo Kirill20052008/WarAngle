@@ -4,14 +4,17 @@ using UnityEngine;
 
 public class Gun : MonoBehaviour
 {
+    public GameObject bullet;
+    public Camera MainCamera;
+    public Transform spawnbullet;
 
-    public GameObject BulletPrefab;
-    public float BulletSpeed;
-    public AudioSource ShotSound;
-
-    public float ShotPeriod = 0.15f;
-
+    public float shootForce;
+    public float spread;
+    public float distance;
+    public float ShootPeriod = 0.15f;
     private float _timer;
+
+    public AudioSource SoundShoot;
 
 
     // Start is called before the first frame update
@@ -23,31 +26,48 @@ public class Gun : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         _timer += Time.deltaTime;
 
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetMouseButtonDown(0))
         {
-            if (_timer > ShotPeriod)
+            if (_timer > ShootPeriod)
             {
-                _timer = 0;
-                CreateBullet();
+                _timer = 0f;
+                Shoot();
             }
 
         }
     }
 
-    void CreateBullet()
+    private void Shoot()
     {
-        GameObject newBullet = Instantiate(BulletPrefab, transform.position, transform.rotation);
-        newBullet.GetComponent<Rigidbody>().velocity = transform.forward * BulletSpeed;
-        ShotSound.pitch = Random.Range(0.9f, 1.1f);
-        ShotSound.Play();
-    }
+        Ray ray = MainCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        RaycastHit hit;
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        Destroy(gameObject);
+        Vector3 targetPoint;
+        if (Physics.Raycast(ray, out hit))
+        {
+            targetPoint = hit.point;    
+        }
+        else
+        {
+            targetPoint = ray.GetPoint(distance);
+        }
+
+        Vector3 dirWithoutSpread = targetPoint - spawnbullet.position;
+
+        float x = Random.Range(-spread, spread);
+        float y = Random.Range(-spread, spread);
+
+        Vector3 dirWithSpread = dirWithoutSpread + new Vector3(x, y, 0);
+
+        GameObject currentBullet = Instantiate(bullet, spawnbullet.position, Quaternion.identity);
+
+        currentBullet.transform.forward = dirWithoutSpread.normalized;
+
+        currentBullet.GetComponent<Rigidbody>().AddForce(dirWithSpread.normalized * shootForce, ForceMode.Impulse);
+
+        SoundShoot.Play();
     }
 
 }

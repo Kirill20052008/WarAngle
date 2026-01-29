@@ -1,4 +1,4 @@
-using System.Collections;
+п»їusing System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -59,31 +59,30 @@ public class MovePlayerScript : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // Ввод (-1..1) по осям
-        float h = Input.GetAxis("Horizontal"); // A/D, стрелки влево/вправо
-        float v = Input.GetAxis("Vertical");   // W/S, стрелки вверх/вниз
+        // Р’РІРѕРґ (-1..1) РїРѕ РѕСЃСЏРј
+        float h = Input.GetAxis("Horizontal"); // A/D, СЃС‚СЂРµР»РєРё РІР»РµРІРѕ/РІРїСЂР°РІРѕ
+        float v = Input.GetAxis("Vertical");   // W/S, СЃС‚СЂРµР»РєРё РІРІРµСЂС…/РІРЅРёР·
 
-        // Вектор движения в локальных осях X/Z
+        // Р’РµРєС‚РѕСЂ РґРІРёР¶РµРЅРёСЏ РІ Р»РѕРєР°Р»СЊРЅС‹С… РѕСЃСЏС… X/Z
         Vector3 input = new Vector3(h, 0f, v);
 
-        // Переводим его в мировой с учётом поворота объекта
+        // РџРµСЂРµРІРѕРґРёРј РµРіРѕ РІ РјРёСЂРѕРІРѕР№ СЃ СѓС‡С‘С‚РѕРј РїРѕРІРѕСЂРѕС‚Р° РѕР±СЉРµРєС‚Р°
         Vector3 moveDir = transform.TransformDirection(input) * Speed;
 
-        // Сохраняем вертикальную скорость (гравитация и прыжки)
+        // РЎРѕС…СЂР°РЅСЏРµРј РІРµСЂС‚РёРєР°Р»СЊРЅСѓСЋ СЃРєРѕСЂРѕСЃС‚СЊ (РіСЂР°РІРёС‚Р°С†РёСЏ Рё РїСЂС‹Р¶РєРё)
         moveDir.y = _rigidbody.velocity.y;
 
         _rigidbody.velocity = moveDir;
 
-        /*
-        Vector3 moveDir =
-            transform.right * _joystick.Horizontal +
-            transform.forward * _joystick.Vertical;
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            Speed = 1.3f;
+        }
 
-        moveDir *= Speed;
-        moveDir.y = _rigidbody.velocity.y;
-
-        _rigidbody.velocity = moveDir;
-        */
+        else
+        {
+            Speed = 3.5f;
+        }
     }
 
 
