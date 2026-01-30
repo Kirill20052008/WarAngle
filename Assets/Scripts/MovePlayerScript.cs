@@ -19,7 +19,7 @@ public class MovePlayerScript : MonoBehaviour
     void Update()
     {
         _xRotation -= Input.GetAxis("Mouse Y") * RotationSercetivity;
-        _xRotation = Mathf.Clamp(_xRotation, -40f, 40f);
+        _xRotation = Mathf.Clamp(_xRotation, -50f, 50f);
         CameraTransform.localEulerAngles = new Vector3(_xRotation, 0f, 0f);
 
         transform.Rotate(0, Input.GetAxis("Mouse X") * RotationSercetivity, 0);
